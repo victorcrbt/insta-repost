@@ -20,8 +20,30 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  plugins: ['react', 'import', 'react-hooks', 'prettier', 'jsx-a11y'],
+  plugins: [
+    'react',
+    'import',
+    'react-hooks',
+    'prettier',
+    'jsx-a11y',
+    'eslint-plugin-import-helpers',
+  ],
   rules: {
+    'import-helpers/order-imports': [
+      'warn',
+      {
+        newlinesBetween: 'always',
+        groups: [
+          ['/^react/', '/^@react/'],
+          'module',
+          '/^~/util/',
+          ['/^~/components/', '/^~/screens/'],
+          '/^~/',
+          ['parent', 'sibling', 'index'],
+        ],
+        // alphabetize: { order: 'asc', ignoreCase: true },
+      },
+    ],
     'import/no-extraneous-dependencies': [
       'error',
       { devDependencies: ['**/Reactotron.js'] },
