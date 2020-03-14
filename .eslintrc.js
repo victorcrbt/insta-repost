@@ -5,9 +5,9 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
-    'plugin:react-native-a11y/all',
     'prettier',
     'prettier/react',
+    'plugin:react-native-a11y/all',
   ],
   globals: {
     Atomics: 'readonly',
@@ -44,5 +44,18 @@ module.exports = {
         extensions: ['.jsx', '.js'],
       },
     ],
+    'react-native-a11y/has-accessibility-props': [
+      'error',
+      {
+        touchables: ['TouchableOpacity'],
+      },
+    ],
+  },
+  settings: {
+    'import/resolver': {
+      'babel-plugin-root-import': {
+        rootPathSuffix: 'src',
+      },
+    },
   },
 };
