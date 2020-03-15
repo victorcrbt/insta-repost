@@ -17,9 +17,7 @@ import {
   AuthorUsername,
 } from './styles';
 
-const Post = ({ noBorder, onPress, data }) => {
-  function handleDelete() {}
-
+const Post = ({ noBorder, onPress, handleDelete, data }) => {
   return (
     <Swipe
       reposted={data.reposted}
@@ -54,6 +52,7 @@ const Post = ({ noBorder, onPress, data }) => {
 Post.propTypes = {
   noBorder: PropTypes.bool,
   onPress: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func,
   data: PropTypes.shape({
     id: PropTypes.string,
     display_url: PropTypes.string,
@@ -68,6 +67,7 @@ Post.propTypes = {
 
 Post.defaultProps = {
   noBorder: false,
+  handleDelete: () => {},
 };
 
 export default Post;

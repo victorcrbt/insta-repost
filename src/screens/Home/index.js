@@ -85,24 +85,121 @@ const Home = ({ navigation }) => {
     fetchFromAsyncStorage();
   }, [isFocused]);
 
+  async function clearNewPosts() {
+    const onlyReposted = await getPostsFromStorage('reposted', true);
+
+    Alert.alert(
+      'Aviso',
+      'Ao clicar em confirmar todos os posts que ainda não foram repostados serão apagados. Deseja continuar?',
+      [
+        { text: 'Cancelar', onPress: () => {} },
+        {
+          text: 'Confirmar',
+          onPress: async () => {
+            await AsyncStorage.setItem(
+              '@repost:posts',
+              JSON.stringify(onlyReposted)
+            );
+            setNewPosts([]);
+          },
+        },
+      ]
+    );
+  }
+
+  async function clearRepostedPosts() {
+    const onlyNew = await getPostsFromStorage('reposted', false);
+
+    Alert.alert(
+      'Aviso',
+      'Ao clicar em confirmar todos os posts que já foram repostados serão apagados. Deseja continuar?',
+      [
+        { text: 'Cancelar', onPress: () => {} },
+        {
+          text: 'Confirmar',
+          onPress: async () => {
+            await AsyncStorage.setItem(
+              '@repost:posts',
+              JSON.stringify(onlyNew)
+            );
+            setReposted([]);
+          },
+        },
+      ]
+    );
+  }
+
+  function handleDeleteNew(id) {
+    Alert.alert('Aviso', 'Deseja realmente excluir esse post?', [
+      { text: 'Cancelar', onPress: () => {} },
+      {
+        text: 'Confirmar',
+        onPress: async () => {
+          const newPostsCopy = newPosts;
+          const postIndex = newPostsCopy.findIndex(post => post.id === id);
+          newPostsCopy.splice(postIndex, 1);
+
+          const dataInStorage = await getPostsFromStorage();
+          const postInStorageIndex = dataInStorage.findIndex(
+            post => post.id === id
+          );
+          dataInStorage.splice(postInStorageIndex, 1);
+
+          await AsyncStorage.setItem(
+            '@repost:posts',
+            JSON.stringify(dataInStorage)
+          );
+
+          setNewPosts([...newPostsCopy]);
+        },
+      },
+    ]);
+  }
+
+  function handleDeleteReposted(id) {
+    Alert.alert('Aviso', 'Deseja realmente excluir esse post?', [
+      { text: 'Cancelar', onPress: () => {} },
+      {
+        text: 'Confirmar',
+        onPress: async () => {
+          const repostedCopy = reposted;
+          const postIndex = repostedCopy.findIndex(post => post.id === id);
+          repostedCopy.splice(postIndex, 1);
+
+          const dataInStorage = await getPostsFromStorage();
+          const postInStorageIndex = dataInStorage.findIndex(
+            post => post.id === id
+          );
+          dataInStorage.splice(postInStorageIndex, 1);
+
+          await AsyncStorage.setItem(
+            '@repost:posts',
+            JSON.stringify(dataInStorage)
+          );
+
+          setReposted([...repostedCopy]);
+        },
+      },
+    ]);
+  }
+
   return (
     <Container>
-      <Section>
-        <Header>
-          <Title>Novos</Title>
+      {newPosts.length > 0 && (
+        <Section>
+          <Header>
+            <Title>Novos</Title>
 
-          <ClearButton
-            onPress={async () => AsyncStorage.removeItem('@repost:posts')}
-          >
-            <ClearButtonText>Limpar</ClearButtonText>
-          </ClearButton>
-        </Header>
+            <ClearButton onPress={clearNewPosts}>
+              <ClearButtonText>Limpar</ClearButtonText>
+            </ClearButton>
+          </Header>
 
-        <Posts>
-          {newPosts.length > 0 &&
-            newPosts.map((post, index) => {
+          <Posts>
+            {newPosts.map((post, index) => {
               return (
                 <Post
+                  handleDelete={() => handleDeleteNew(post.id)}
                   key={post.id}
                   data={post}
                   noBorder={newPosts.length - 1 === index}
@@ -110,29 +207,29 @@ const Home = ({ navigation }) => {
                 />
               );
             })}
-        </Posts>
-      </Section>
+          </Posts>
+        </Section>
+      )}
 
-      <Separator />
+      {newPosts.length > 0 && reposted.length > 0 && <Separator />}
 
-      <Section>
-        <Header>
-          <Title>Repostados</Title>
+      {reposted.length > 0 && (
+        <Section>
+          <Header>
+            <Title>Repostados</Title>
 
-          <ClearButton
-            onPress={async () => AsyncStorage.removeItem('@repost:posts')}
-          >
-            <ClearButtonText>Limpar</ClearButtonText>
-          </ClearButton>
-        </Header>
+            <ClearButton onPress={clearRepostedPosts}>
+              <ClearButtonText>Limpar</ClearButtonText>
+            </ClearButton>
+          </Header>
 
-        <Posts>
-          {reposted.length > 0 &&
-            reposted.map((post, index) => {
+          <Posts>
+            {reposted.map((post, index) => {
               if (!post.reposted) return;
 
               return (
                 <Post
+                  handleDelete={() => handleDeleteReposted(post.id)}
                   key={post.id}
                   data={post}
                   noBorder={reposted.length - 1 === index}
@@ -140,8 +237,9 @@ const Home = ({ navigation }) => {
                 />
               );
             })}
-        </Posts>
-      </Section>
+          </Posts>
+        </Section>
+      )}
     </Container>
   );
 };
