@@ -38,6 +38,9 @@ target 'repost' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
+
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+
   target 'repostTests' do
     inherit! :search_paths
     # Pods for testing
