@@ -15,14 +15,14 @@ import {
   AuthorUsername,
 } from './styles';
 
-const Post = ({ noBorder, handleDelete }) => {
+const Post = ({ noBorder, handleDelete, onPress }) => {
   return (
     <Swipe
       friction={1}
       renderRightActions={() => <DeleteButton onPress={handleDelete} />}
       noBorder={noBorder}
     >
-      <TouchableHandler onPress={() => console.tron.log('clicado')}>
+      <TouchableHandler onPress={onPress}>
         <Container>
           <Preview
             source={{
