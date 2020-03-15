@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import DeleteButton from '~/components/DeleteButton';
 
 import {
@@ -15,7 +17,9 @@ import {
   AuthorUsername,
 } from './styles';
 
-const Post = ({ noBorder, handleDelete, onPress }) => {
+const Post = ({ noBorder, onPress, data }) => {
+  function handleDelete() {}
+
   return (
     <Swipe
       friction={1}
@@ -26,33 +30,43 @@ const Post = ({ noBorder, handleDelete, onPress }) => {
         <Container>
           <Preview
             source={{
-              uri:
-                'https://instagram.fpoa35-1.fna.fbcdn.net/v/t51.2885-15/e35/90027493_1563560460434976_2490696035425728349_n.jpg?_nc_ht=instagram.fpoa35-1.fna.fbcdn.net&_nc_cat=100&_nc_ohc=SsGWwReLFccAX_IpLzh&oh=f7e09f8fd4b31882f1f93a05f8235bdd&oe=5E9B1181',
+              uri: data.display_url,
             }}
           />
 
           <PostInfo>
             <PostCaptionContainer>
-              <PostCaption>
-                My mom said i can be anything i want so shut up. I know i dont
-                look like one but my dream is to be a northern cardinal
-              </PostCaption>
+              <PostCaption>{data.caption}</PostCaption>
             </PostCaptionContainer>
 
             <AuthorContainer>
-              <AuthorAvatar
-                source={{
-                  uri:
-                    'https://instagram.fpoa35-1.fna.fbcdn.net/v/t51.2885-19/s150x150/88377910_229584331549679_3359518514078547968_n.jpg?_nc_ht=instagram.fpoa35-1.fna.fbcdn.net&_nc_ohc=QDPEbVRAAqcAX_TZ_TD&oh=e6e22015a387d8b5df86b336f00d643b&oe=5E9D4F90',
-                }}
-              />
-              <AuthorUsername>sinful.cats</AuthorUsername>
+              <AuthorAvatar source={{ uri: data.author.profile_pic_url }} />
+              <AuthorUsername>{data.author.username}</AuthorUsername>
             </AuthorContainer>
           </PostInfo>
         </Container>
       </TouchableHandler>
     </Swipe>
   );
+};
+
+Post.propTypes = {
+  noBorder: PropTypes.bool,
+  onPress: PropTypes.func.isRequired,
+  data: PropTypes.shape({
+    id: PropTypes.string,
+    display_url: PropTypes.string,
+    video_url: PropTypes.string,
+    video_duration: PropTypes.number,
+    is_video: PropTypes.bool,
+    caption: PropTypes.string,
+    author: PropTypes.object,
+    reposted: PropTypes.bool,
+  }).isRequired,
+};
+
+Post.defaultProps = {
+  noBorder: false,
 };
 
 export default Post;
