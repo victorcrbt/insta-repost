@@ -5,6 +5,8 @@ import Share from 'react-native-share';
 import PropTypes from 'prop-types';
 import RNFetchBlob from 'rn-fetch-blob';
 
+import updateRepostStatus from '~/util/updateRepostStatus';
+
 import {
   Container,
   VideoPlayer,
@@ -34,6 +36,8 @@ const Repost = ({ route, navigation }) => {
       title: 'Share via',
       message: 'some message',
     });
+
+    await updateRepostStatus(post.id);
 
     navigation.navigate('Home');
   }
