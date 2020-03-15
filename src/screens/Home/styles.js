@@ -19,7 +19,7 @@ export const Section = styled.View``;
 export const Header = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-bottom: 5px;
 `;
 
