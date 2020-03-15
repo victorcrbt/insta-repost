@@ -7,8 +7,8 @@ export const Swipe = styled(Swipeable).attrs(props => ({
     borderBottomColor: '#ccc',
     borderBottomWidth: props.noBorder ? 0 : 1,
     marginBottom: 10,
-    // padding: 10,
     zIndex: 20,
+    opacity: props.reposted ? 0.5 : 1,
   },
 }))``;
 

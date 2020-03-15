@@ -22,11 +22,12 @@ const Post = ({ noBorder, onPress, data }) => {
 
   return (
     <Swipe
+      reposted={data.reposted}
       friction={1}
       renderRightActions={() => <DeleteButton onPress={handleDelete} />}
       noBorder={noBorder}
     >
-      <TouchableHandler onPress={onPress}>
+      <TouchableHandler onPress={!data.reposted ? onPress : () => {}}>
         <Container>
           <Preview
             source={{
